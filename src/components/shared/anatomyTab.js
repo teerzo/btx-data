@@ -787,7 +787,7 @@ render() {
                         <p> Test </p>
                     </div>
                 </div>
-                <div className="title"> {this.state.tabData.tabName} </div>
+                {/* <div className="title"> {this.state.tabData.tabName} </div> */}
                 <Heatmap
                     optionsChanged={this.state.optionsChanged}
 

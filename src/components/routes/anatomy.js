@@ -1383,7 +1383,7 @@ export default class Anatomy extends React.Component {
         tabs[this.state.tabIndex].muscleId = '';
         tabs[this.state.tabIndex].visualId = '';
 
-        tabs[this.state.tabIndex].tabName = 'Ask Matt';
+        // tabs[this.state.tabIndex].tabName = 'Ask Matt';
 
         this.setState({
             optionsChanged: true,
@@ -1411,6 +1411,7 @@ export default class Anatomy extends React.Component {
         tabs[this.state.tabIndex].conditionId = Number(value);
         tabs[this.state.tabIndex].muscleId = '';
         tabs[this.state.tabIndex].visualId = '';
+        tabs[this.state.tabIndex].tabName = text;
 
         
         tabs[this.state.tabIndex].info.title = text;
