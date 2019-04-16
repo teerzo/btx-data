@@ -31,7 +31,7 @@ import fileMuscles from '../../data/muscles';
 // imgs
 import tempImg from '../../images/temp.png';
 
-const BASE_URL = 'https://dlwca3zy2e.execute-api.us-east-1.amazonaws.com/dev';
+const BASE_URL = 'https://8eiw0zieri.execute-api.us-east-1.amazonaws.com/dev';
 
 export default class Anatomy extends React.Component {
     constructor(props) {
@@ -50,7 +50,9 @@ export default class Anatomy extends React.Component {
         this.checkData = this.checkData.bind(this);
         this.checkDataPhysicians = this.checkDataPhysicians.bind(this);
         this.checkDataConditions = this.checkDataConditions.bind(this);
-        this.checkDataPatients = this.checkDataPatients.bind(this);
+        this.checkDataMuscles = this.checkDataMuscles.bind(this);
+        this.checkDataInjections = this.checkDataInjections.bind(this);
+        // this.checkDataPatients = this.checkDataPatients.bind(this);
 
 
         this.update = this.update.bind(this);
@@ -80,12 +82,16 @@ export default class Anatomy extends React.Component {
         // Data process
         this.processPhysicians = this.processPhysicians.bind(this);
         this.processConditions = this.processConditions.bind(this);
-        this.processSessions = this.processSessions.bind(this);
+        this.processMuscles = this.processMuscles.bind(this);
+        this.processInjections = this.processInjections.bind(this);
+        // this.processSessions = this.processSessions.bind(this);
 
         // Data requests AXIOS
         this.requestPhysicians = this.requestPhysicians.bind(this);
         this.requestConditions = this.requestConditions.bind(this);
-        this.requestSessions = this.requestSessions.bind(this);
+        this.requestMuscles = this.requestMuscles.bind(this);
+        this.requestInjections = this.requestInjections.bind(this);
+        // this.requestSessions = this.requestSessions.bind(this);
 
         this.state = {
             optionsChanged: false,
@@ -505,8 +511,9 @@ export default class Anatomy extends React.Component {
 
             if (tab.conditionId !== null && tab.conditionId !== '') {
                 for (let c = 0; c < physician.conditions.length; c++) {
-                    if (tab.conditionId === physician.conditions[c].condition_id) {
-                        if (!this.checkDataPatients(tab, physician.conditions[c])) {
+                    if (tab.conditionId === physician.conditions[c].conditionId) {
+                        // if (!this.checkDataMuscles(tab, physician.conditions[c])) {
+                        if (!this.checkDataMuscles(tab, physician)) {
                             return false;
                         }
                     }
@@ -541,27 +548,109 @@ export default class Anatomy extends React.Component {
     //     }
     // }
 
-    checkDataPatients(tab, condition) {
-        if (condition.patients && condition.patients.length > 0) {
-            for (let p = 0; p < condition.patients.length; p++) {
-                if (condition.patients[p].sessions === null) {
-                    // no sessions in database
-                }
-                else if (condition.patients[p].sessions && condition.patients[p].sessions.length > 0) {
-                    // sessions in database
-                }
-                else {
-                    // havent checked yet, attempt to download
-                    console.log('download patients', p, condition.patients.length);
-                    this.setTaskPopup('request session', 'Requesting data', 'Downloading patient data ' + (p+1) + '/'+condition.patients.length + ' please wait');
-                    this.requestSessions(tab, condition.patients[p]);
-                    return false;
-                }
-            }
+    // checkDataMuscles(tab, condition) {
+    //     if (condition.muscles && condition.muscles.length > 0) {
+    //         for (let p = 0; p < condition.muscles.length; p++) {
+    //             if (condition.muscles[p].injections === null) {
+    //                 // no sessions in database
+    //             }
+    //             else if (condition.muscles[p].injections && condition.muscles[p].injections.length > 0) {
+    //                 // sessions in database
+    //             }
+    //             else {
+    //                 // havent checked yet, attempt to download
+    //                 console.log('download injections', p, condition.muscles.length);
+    //                 this.setTaskPopup('request injections', 'Requesting data', 'Downloading injection data please wait');
+    //                 this.requestInjections(tab, condition.muscles[p]);
+    //                 return false;
+    //             }
+    //         }
+    //         return true;
+    //     }
+    //     else {
+    //         console.log('no muscles, trying to download muscle data now');
+    //         this.requestMuscles(tab);
+    //         return false;
+    //     }
+    // }
+
+    checkDataMuscles(tab, physician) {
+        // debugger;
+
+        let match = false;
+        if (physician.injections === null ) {
             return true;
+        }  
+        else if( physician.injections && physician.injections.length > 0 ) {
+            if( physician.injections.length === physician.injectionsCount) {
+                return true;
+            }
+            else {
+                this.setTaskPopup('request injections', 'Requesting data', 'Downloading injection data please wait');
+                this.requestInjections(tab, physician.injections.length, 10000);
+                return false;
+            }
         }
-        return true;
+        else {
+            // havent checked yet, attempt to download
+            // console.log('download injections', p, condition.muscles.length);
+            this.setTaskPopup('request injections', 'Requesting data', 'Downloading injection data please wait');
+            this.requestInjections(tab, 0, 10000);
+            return false;
+        }
+        
+
+        // if (condition.muscles && condition.muscles.length > 0) {
+        //     for (let p = 0; p < condition.muscles.length; p++) {
+        //         if (condition.muscles[p].injections === null) {
+        //             // no sessions in database
+        //         }
+        //         else if (condition.muscles[p].injections && condition.muscles[p].injections.length > 0) {
+        //             // sessions in database
+        //         }
+        //         else {
+        //             // havent checked yet, attempt to download
+        //             console.log('download injections', p, condition.muscles.length);
+        //             this.setTaskPopup('request injections', 'Requesting data', 'Downloading injection data please wait');
+        //             this.requestInjections(tab, condition.muscles[p]);
+        //             return false;
+        //         }
+        //     }
+        //     return true;
+        // }
+        // else {
+        //     console.log('no muscles, trying to download muscle data now');
+        //     this.requestMuscles(tab);
+        //     return false;
+        // }
     }
+    
+
+    checkDataInjections(tab, muscle) {
+
+    }
+
+    // checkDataPatients(tab, condition) {
+    //     if (condition.patients && condition.patients.length > 0) {
+    //         for (let p = 0; p < condition.patients.length; p++) {
+    //             if (condition.patients[p].sessions === null) {
+    //                 // no sessions in database
+    //             }
+    //             else if (condition.patients[p].sessions && condition.patients[p].sessions.length > 0) {
+    //                 // sessions in database
+    //             }
+    //             else {
+    //                 // havent checked yet, attempt to download
+    //                 console.log('download patients', p, condition.patients.length);
+    //                 this.setTaskPopup('request session', 'Requesting data', 'Downloading patient data ' + (p+1) + '/'+condition.patients.length + ' please wait');
+    //                 this.requestSessions(tab, condition.patients[p]);
+    //                 return false;
+    //             }
+    //         }
+    //         return true;
+    //     }
+    //     return true;
+    // }
 
 
 
@@ -804,58 +893,40 @@ export default class Anatomy extends React.Component {
                             if (tab.conditionId === physician.conditions[c].condition_id) {
                                 const condition = physician.conditions[c];
 
-                                for (let pa = 0; pa < condition.patients.length; pa++) {
-                                    const patient = condition.patients[pa];
+                                // $$$
+                                // for (let pa = 0; pa < condition.patients.length; pa++) {
+                                //     const patient = condition.patients[pa];
 
-                                    if (patient.sessions && patient.sessions.length > 0) {
-                                        for (let s = 0; s < patient.sessions.length; s++) {
-                                            const session = patient.sessions[s];
 
-                                            // console.log('injections', session.injections.length);
-                                            if (session.injections && session.injections.length > 0) {
-                                                for (let i = 0; i < session.injections.length; i++) {
-                                                    const injection = session.injections[i];
+                                    // $$$
+                                    // if (patient.sessions && patient.sessions.length > 0) {
+                                    //     for (let s = 0; s < patient.sessions.length; s++) {
+                                    //         const session = patient.sessions[s];
 
-                                                    for (let bm = 0; bm < dataMuscles.length; bm++) {
-                                                        for (let m = 0; m < dataMuscles[bm].muscles.length; m++) {
-                                                            let muscle = dataMuscles[bm].muscles[m];
+                                    //         // console.log('injections', session.injections.length);
+                                    //         if (session.injections && session.injections.length > 0) {
+                                    //             for (let i = 0; i < session.injections.length; i++) {
+                                    //                 const injection = session.injections[i];
 
-                                                            // if (muscle.muscleId === tab.muscleViewId) {
+                                    //                 for (let bm = 0; bm < dataMuscles.length; bm++) {
+                                    //                     for (let m = 0; m < dataMuscles[bm].muscles.length; m++) {
+                                    //                         let muscle = dataMuscles[bm].muscles[m];
 
-                                                            // console.log('muscle', muscle);
-                                                            if (injection.muscle_image_id === muscle.muscleId) {
-                                                                // dataMuscles[bm].injectionCount += 1;
-                                                                muscle.injectionCount += 1;
-                                                            }
-                                                            dataMuscles[bm].muscles[m] = muscle;
-                                                        }
-                                                    }
+                                    //                         // if (muscle.muscleId === tab.muscleViewId) {
 
-                                                    // for (let m = 0; m < this.state.dataMuscles[i].muscles.length; m++) {
-                                                    //     if (this.state.dataMuscles[i].muscles[m].muscleId === this.state.tabData.muscleViewId) {
-                                                    //         const firstMuscle = this.state.dataMuscles[i].muscles[m];
-                            
-                                                    //         imgBg = firstMuscle.muscleImgBg;
-                                                    //         imgOver = firstMuscle.muscleImgOverlay;
-                            
-                                                    //         imgs.push(imgOver);
-                                                    //         if (firstMuscle.muscleType === 'anterior-superficial') {
-                                                    //             for (let mm = 0; mm < this.state.dataMuscles[i].muscles.length; mm++) {
-                                                    //                 const secondMuscle = this.state.dataMuscles[i].muscles[mm];
-                                                    //                 if (firstMuscle.muscleId !== secondMuscle.muscleId) {
-                                                    //                     if (firstMuscle.muscleType === secondMuscle.muscleType) {
-                                                    //                         imgs.push(secondMuscle.muscleImgOverlay);
-                                                    //                     }
-                                                    //                 }
-                                                    //             }
-                                                    //         }
-                                                    //     }
-                                                    // }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                    //                         // console.log('muscle', muscle);
+                                    //                         if (injection.muscle_image_id === muscle.muscleId) {
+                                    //                             // dataMuscles[bm].injectionCount += 1;
+                                    //                             muscle.injectionCount += 1;
+                                    //                         }
+                                    //                         dataMuscles[bm].muscles[m] = muscle;
+                                    //                     }
+                                    //                 }
+                                    //             }
+                                    //         }
+                                    //     }
+                                    // }
+                                // }
                             }
                         }
                     }
@@ -1008,7 +1079,7 @@ export default class Anatomy extends React.Component {
     
         //         let groups = [];
         //         let newPoints = data.slice(0);
-        //         // debugger;
+        //         // ;
         //         while (newPoints.length > 0) {
         //             let point1 = newPoints[0];
         //             let add = false;
@@ -1117,12 +1188,12 @@ export default class Anatomy extends React.Component {
         //             colours.push(colourRange[3]);
     
         //             // console.log(colours);
-        //             // debugger;
+        //             // ;
         //             // generateColor('#000000','#ff0ff0',10);
     
         //             let domRange = document.getElementById('color-range');
         //             domRange.innerHTML = '';
-        //             // debugger;
+        //             // ;
         //             for (let i = 0; i < colours.length; i++) {
         //                 let colorDiv = document.createElement('div');
         //                 colorDiv.classList.add('color-div');
@@ -1135,7 +1206,7 @@ export default class Anatomy extends React.Component {
     
         //             // console.log('finalGroups.length', finalGroups.length);
         //             // console.log('colours.length', colours.length);
-        //             // debugger;
+        //             // ;
     
         //             // if( ) {
     
@@ -1472,6 +1543,8 @@ export default class Anatomy extends React.Component {
         let physicians = [];
 
         physicians = temp;
+        
+    
 
 
         this.setState({
@@ -1482,7 +1555,7 @@ export default class Anatomy extends React.Component {
     }
     processConditions() {
         // console.log('processConditions');
-        let temp = this.state.tempConditions.physician;
+        let temp = this.state.tempConditions;
         let physicians = this.state.dataPhysicians;
 
         // let data = {
@@ -1502,8 +1575,12 @@ export default class Anatomy extends React.Component {
         console.log(temp);
 
         for (let i = 0; i < physicians.length; i++) {
-            if (physicians[i].physicianId === temp.physicianId) {
-                physicians[i].conditions = temp.conditions;
+            physicians[i].conditions = [];
+            for( let c = 0; c < this.state.tempConditions.length; c++ ) {
+                const condition = this.state.tempConditions[c];
+                if (physicians[i].physicianId === condition.physicianId) {
+                    physicians[i].conditions.push(condition);
+                }
             }
         }
 
@@ -1512,70 +1589,152 @@ export default class Anatomy extends React.Component {
             dataPhysicians: physicians,
         }, this.checkData);
     }
-    processSessions() {
-        // console.log('processSessions');
-        let temp = this.state.tempSessions.patient;
+
+    processMuscles() {
+        // console.log('processConditions');
+        let temp = this.state.tempMuscles;
         let physicians = this.state.dataPhysicians;
 
-        // console.log('processSessions', temp);
-
+        // ;
         // let data = {
         //     physicianId: body.physicianId,
-        //     conditionId: body.conditionId,
-        //     patientid: body.patientId,
-        //     sessions: sessions,
+        //     conditions: conditions,
         // }
+
         // res.json({
         //     // "body": JSON.stringify({ injections: injections.length }),
         //     "body": JSON.stringify({ 
-        //         patient: data
-        //         // patients: patients
+        //         physician: data
         //     }),
         //     "message": "success",
         //     "isBase64Encoded": false
         // });
-        if (temp && temp.physicianId) {
-            for (let p = 0; p < physicians.length; p++) {
-                if (physicians[p].physicianId === temp.physicianId) {
-                    for (let c = 0; c < physicians[p].conditions.length; c++) {
-                        if (physicians[p].conditions[c].condition_id === temp.conditionId) {
-                            for (let pa = 0; pa < physicians[p].conditions[c].patients.length; pa++) {
-                                if (Number(physicians[p].conditions[c].patients[pa].patient_id) === Number(temp.patientId)) {
-                                    if (temp.sessions && temp.sessions.length > 0) {
-                                        physicians[p].conditions[c].patients[pa].sessions = temp.sessions;
 
-                                    
-                                        for (let s = 0; s < temp.sessions.length; s++) {
+        console.log(temp);
+        for (let i = 0; i < physicians.length; i++) {
+    
 
-                                            if (temp.sessions[s].injections && temp.sessions[s].injections.length > 0) {
-                                                console.log('injections', temp.sessions[s].injections.length);
-                                            }
+            for (let c = 0; c < physicians[i].conditions.length; c++) {
+                
 
-                                        }
-                                        
-
-
-                                    }
-                                    else {
-                                        physicians[p].conditions[c].patients[pa].sessions = null;
-                                    }
-                                }
-                            }
-                        }
+                physicians[i].conditions[c].muscles = [];
+                
+                for (let m = 0; m < this.state.tempMuscles.length; m++) {
+                    const muscle = this.state.tempMuscles[m];
+                    if (physicians[i].physicianId === muscle.physicianId && physicians[i].conditions[c].conditionId === muscle.conditionId ) {
+                        physicians[i].conditions[c].muscles.push(muscle);
                     }
                 }
             }
-        }
-        else {
-            console.log('processSessions error invalid object', temp);
-        }   
 
+            // for( let c = 0; c < this.state.tempConditions.length; c++ ) {
+
+            //     const condition = this.state.tempConditions[c];
+            //     if (physicians[i].physicianId === condition.physicianId) {
+            //         physicians[i].conditions.push(condition);
+            //     }
+            // }
+        }
 
         this.setState({
-            tempSessions: [],
+            tempMuscles: [],
             dataPhysicians: physicians,
         }, this.checkData);
     }
+
+    processInjections() {
+        console.log('processInjections');
+        let temp = this.state.tempInjections;
+        let physicians = this.state.dataPhysicians; 
+
+
+        console.log(temp);
+
+
+        for (let i = 0; i < physicians.length; i++) {
+            if( this.state.tabs[this.state.tabIndex].physicianId === physicians[i].physicianId ) {
+                console.log(physicians[i].physicianId );
+                if( temp && temp.length > 0 ) {
+                    if( physicians[i].injections && physicians[i].injections.length > 0 ) {
+                        physicians[i].injections = physicians[i].injections.concat(temp);
+                    }   
+                    else {
+                        physicians[i].injections = [];    
+                        physicians[i].injections = physicians[i].injections.concat(temp);
+                    }   
+                }                
+            }
+        }
+
+        this.setState({
+            tempMuscles: [],
+            dataPhysicians: physicians,
+        }, this.checkData);
+    }
+    // processSessions() {
+    //     // console.log('processSessions');
+    //     let temp = this.state.tempSessions.patient;
+    //     let physicians = this.state.dataPhysicians;
+
+    //     // console.log('processSessions', temp);
+
+    //     // let data = {
+    //     //     physicianId: body.physicianId,
+    //     //     conditionId: body.conditionId,
+    //     //     patientid: body.patientId,
+    //     //     sessions: sessions,
+    //     // }
+    //     // res.json({
+    //     //     // "body": JSON.stringify({ injections: injections.length }),
+    //     //     "body": JSON.stringify({ 
+    //     //         patient: data
+    //     //         // patients: patients
+    //     //     }),
+    //     //     "message": "success",
+    //     //     "isBase64Encoded": false
+    //     // });
+    //     if (temp && temp.physicianId) {
+    //         for (let p = 0; p < physicians.length; p++) {
+    //             if (physicians[p].physicianId === temp.physicianId) {
+    //                 for (let c = 0; c < physicians[p].conditions.length; c++) {
+    //                     if (physicians[p].conditions[c].condition_id === temp.conditionId) {
+    //                         for (let pa = 0; pa < physicians[p].conditions[c].patients.length; pa++) {
+    //                             if (Number(physicians[p].conditions[c].patients[pa].patient_id) === Number(temp.patientId)) {
+    //                                 if (temp.sessions && temp.sessions.length > 0) {
+    //                                     physicians[p].conditions[c].patients[pa].sessions = temp.sessions;
+
+                                    
+    //                                     for (let s = 0; s < temp.sessions.length; s++) {
+
+    //                                         if (temp.sessions[s].injections && temp.sessions[s].injections.length > 0) {
+    //                                             console.log('injections', temp.sessions[s].injections.length);
+    //                                         }
+
+    //                                     }
+                                        
+
+
+    //                                 }
+    //                                 else {
+    //                                     physicians[p].conditions[c].patients[pa].sessions = null;
+    //                                 }
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     else {
+    //         console.log('processSessions error invalid object', temp);
+    //     }   
+
+
+    //     this.setState({
+    //         tempSessions: [],
+    //         dataPhysicians: physicians,
+    //     }, this.checkData);
+    // }
 
 
 
@@ -1614,16 +1773,17 @@ export default class Anatomy extends React.Component {
             headers: { 'Access-Control-Allow-Origin': '*' },
             params: params,
         }
-        axios.get(BASE_URL + '/physician', config).then(function (response) {
-            // console.log('physician', response);
+        axios.get(BASE_URL + '/physicians', config).then(function (response) {
+            console.log('$$$ physician', response);
             if (response.data.body) {
                 let parsed = JSON.parse(response.data.body);
                 let physicians = [];
-                for (var i = 0; i < parsed.physicians.length; i++) {
+                for (var i = 0; i < parsed.length; i++) {
                     // console.log(parsed.physicians[i]);
                     physicians.push({
-                        physicianName: parsed.physicians[i].physicianName ? parsed.physicians[i].physicianName : 'No name provided by server',
-                        physicianId: parsed.physicians[i].physicianId ? parsed.physicians[i].physicianId : 'No id provided by server',
+                        physicianName: parsed[i].physicianName ? parsed[i].physicianName : 'No name provided by server',
+                        physicianId: parsed[i].physicianId ? parsed[i].physicianId : 'No id provided by server',
+                        injectionsCount: parsed[i].injectionsCount ? parsed[i].injectionsCount : 0,
                         conditions: [],
                     });
                 }
@@ -1634,9 +1794,9 @@ export default class Anatomy extends React.Component {
             console.log('Show error notification!')
             this.hideTaskPopup('request physician');
 
-            window.alert('Failed to download meta data', error);
+            window.alert('Failed to download physician data', error);
             return Promise.reject(error)
-        });
+        }.bind(this));
     }
     requestConditions(tab) {
         this.setTaskPopup('request condition', 'Requesting data', 'Downloading condition data please wait');
@@ -1649,19 +1809,20 @@ export default class Anatomy extends React.Component {
             headers: { 'Access-Control-Allow-Origin': '*' },
             params: params,
         }
-        axios.get(BASE_URL + '/condition', config).then(function (response) {
+        axios.get(BASE_URL + '/conditions', config).then(function (response) {
             // console.log('condition', response);
             if (response.data.body) {
                 let parsed = JSON.parse(response.data.body);
                 let conditions = parsed;
-                // for( var i = 0; i < parsed.physicians.length; i++ ) {
-                //     console.log(parsed.physicians[i]);
-                //     physicians.push({
-                //         physicianName: parsed.physicians[i].physicianName ? parsed.physicians[i].physicianName : 'No name provided by server',
-                //         physicianId: parsed.physicians[i].physicianId ? parsed.physicians[i].physicianId : 'No id provided by server',
-                //         conditions: [],
-                //     });
-                // }
+                for( var i = 0; i < conditions.length; i++ ) {
+                    // console.log(parsed.physicians[i]);
+                    conditions[i].muscles = [];
+                    // physicians.push({
+                    //     physicianName: parsed.physicians[i].physicianName ? parsed.physicians[i].physicianName : 'No name provided by server',
+                    //     physicianId: parsed.physicians[i].physicianId ? parsed.physicians[i].physicianId : 'No id provided by server',
+                    //     conditions: [],
+                    // });
+                }
                 this.hideTaskPopup('request condition');
                 this.setState({ tempConditions: conditions }, this.processConditions);
             }
@@ -1673,34 +1834,51 @@ export default class Anatomy extends React.Component {
             // return Promise.reject(error)
         });
     }
-    requestSessions(tab, patient) {
-        // this.setTaskPopup('request condition', 'Requesting data', 'Downloading condition data please wait');
-        // let test = {
-        //     patient: {
-        //         physicianId: tab.physicianId,
-        //         conditionId: tab.conditionId,
-        //         patientId: patient.patient_id,
-        //         sessions: [],
-        //     }
-        // }
-
-        // this.setState({ tempSessions: test }, this.processSessions);
-
+    requestMuscles(tab, condition) {
         let params = {
             physicianId: tab.physicianId,
             conditionId: tab.conditionId,
-            patientId: patient.patient_id,
+            // muscle: patient.patient_id,
         };
         // console.log('requestSessions', params);
         let config = {
             headers: { 'Access-Control-Allow-Origin': '*' },
             params: params,
         }
-        axios.get(BASE_URL + '/session', config).then(function (response) {
+        axios.get(BASE_URL + '/muscles', config).then(function (response) {
             // console.log('session', response);
             if (response.data.body) {
                 let parsed = JSON.parse(response.data.body);
-                let sessions = parsed;
+                let muscles = parsed;
+           
+                this.hideTaskPopup('request muscles');
+                this.setState({ tempMuscles: muscles }, this.processMuscles);
+            }
+        }.bind(this)).catch(function (error) {
+            console.log('Show error notification!')
+            this.hideTaskPopup('request muscles');
+            window.alert('Failed to download muscles data', error);
+            // return Promise.reject(error)
+        });
+    }
+    requestInjections(tab, start, limit) {
+        let params = {
+            start: start,
+            limit: limit,
+            physicianId: tab.physicianId,
+            // conditionId: tab.conditionId,
+            // muscleId: tab.muscleId,
+        };
+        console.log('requestSessions', params);
+        let config = {
+            headers: { 'Access-Control-Allow-Origin': '*' },
+            params: params,
+        }
+        axios.get(BASE_URL + '/injections', config).then(function (response) {
+            console.log('session', response);
+            if (response.data.body) {
+                let parsed = JSON.parse(response.data.body);
+                let injections = parsed;
                 // for( var i = 0; i < parsed.physicians.length; i++ ) {
                 //     console.log(parsed.physicians[i]);
                 //     physicians.push({
@@ -1709,16 +1887,64 @@ export default class Anatomy extends React.Component {
                 //         conditions: [],
                 //     });
                 // }
-                this.hideTaskPopup('request session');
-                this.setState({ tempSessions: sessions }, this.processSessions);
+                this.hideTaskPopup('request injections');
+                this.setState({ tempInjections: injections }, this.processInjections);
             }
         }.bind(this)).catch(function (error) {
             console.log('Show error notification!')
-            this.hideTaskPopup('request session');
-            window.alert('Failed to download condition data', error);
+            this.hideTaskPopup('request injections');
+            window.alert('Failed to download injections data', error);
             // return Promise.reject(error)
-        });
+        }.bind(this));
     }
+
+
+    // requestSessions(tab, patient) {
+    //     // this.setTaskPopup('request condition', 'Requesting data', 'Downloading condition data please wait');
+    //     // let test = {
+    //     //     patient: {
+    //     //         physicianId: tab.physicianId,
+    //     //         conditionId: tab.conditionId,
+    //     //         patientId: patient.patient_id,
+    //     //         sessions: [],
+    //     //     }
+    //     // }
+
+    //     // this.setState({ tempSessions: test }, this.processSessions);
+
+    //     let params = {
+    //         physicianId: tab.physicianId,
+    //         conditionId: tab.conditionId,
+    //         patientId: patient.patient_id,
+    //     };
+    //     // console.log('requestSessions', params);
+    //     let config = {
+    //         headers: { 'Access-Control-Allow-Origin': '*' },
+    //         params: params,
+    //     }
+    //     axios.get(BASE_URL + '/session', config).then(function (response) {
+    //         // console.log('session', response);
+    //         if (response.data.body) {
+    //             let parsed = JSON.parse(response.data.body);
+    //             let sessions = parsed;
+    //             // for( var i = 0; i < parsed.physicians.length; i++ ) {
+    //             //     console.log(parsed.physicians[i]);
+    //             //     physicians.push({
+    //             //         physicianName: parsed.physicians[i].physicianName ? parsed.physicians[i].physicianName : 'No name provided by server',
+    //             //         physicianId: parsed.physicians[i].physicianId ? parsed.physicians[i].physicianId : 'No id provided by server',
+    //             //         conditions: [],
+    //             //     });
+    //             // }
+    //             this.hideTaskPopup('request session');
+    //             this.setState({ tempSessions: sessions }, this.processSessions);
+    //         }
+    //     }.bind(this)).catch(function (error) {
+    //         console.log('Show error notification!')
+    //         this.hideTaskPopup('request session');
+    //         window.alert('Failed to download condition data', error);
+    //         // return Promise.reject(error)
+    //     });
+    // }
 
     render() {
         return (

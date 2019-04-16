@@ -172,9 +172,12 @@ export default class AnatomyOptions extends React.Component {
         }
     }
     updateMuscles() {
-        // console.log('updateMuscles');
+        // console.log('anatomyOptions.updateMuscles');
 
-       
+        const tabData = this.state.tabData;
+        const physicians = this.state.dataPhysicians;
+
+
 
         if( this.state.dataMuscles && this.state.dataMuscles.length > 0 ) {
 
@@ -184,12 +187,26 @@ export default class AnatomyOptions extends React.Component {
                 dataMuscles[bm].injectionCount = 0;
 
                 for (let m = 0; m < dataMuscles[bm].muscles.length; m++) {
-                    if( dataMuscles[bm].muscles[m].injectionCount > 0 ) {
-                        dataMuscles[bm].injectionCount += dataMuscles[bm].muscles[m].injectionCount;
-                       
+                    if( physicians ) {
+                        for( let p = 0; p < physicians.length; p++ ) {
+                            if( tabData.physicianId === physicians[p].physicianId ) {
+                                if( physicians[p].injections && physicians[p].injections.length > 0 ) {
+                                    for( let i = 0; i < physicians[p].injections.length; i++ ) {
+                                        if( dataMuscles[bm].muscles[m].muscleId === physicians[p].injections[i].muscleId ) {
+                                            dataMuscles[bm].injectionCount += 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                }
 
+                    // if( dataMuscles[bm].muscles[m].injectionCount > 0 ) {
+                    //     dataMuscles[bm].injectionCount += dataMuscles[bm].muscles[m].injectionCount;
+                       
+                    // }
+                }
+                
                 if( dataMuscles[bm].injectionCount > 0 ) {
                     filtered.push(this.state.dataMuscles[bm]);
                 }   

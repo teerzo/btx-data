@@ -97,7 +97,7 @@ export default class Heatmap extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        console.log('heatmap update', newProps.optionsChanged);
+        // console.log('heatmap update', newProps.optionsChanged);
 
 
 
@@ -229,7 +229,7 @@ export default class Heatmap extends React.Component {
     }
 
     update() {
-        console.log('heatmap update', this.state.updating, this.state.optionsChanged);
+        // console.log('heatmap update', this.state.updating, this.state.optionsChanged);
         // debugger;
 
 
