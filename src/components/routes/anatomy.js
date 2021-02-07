@@ -1846,7 +1846,7 @@ export default class Anatomy extends React.Component {
             params: params,
         }
         axios.get(BASE_URL + '/muscles', config).then(function (response) {
-            // console.log('session', response);
+            console.log('session', response);
             if (response.data.body) {
                 let parsed = JSON.parse(response.data.body);
                 let muscles = parsed;

@@ -134,6 +134,10 @@ export default class AnatomyInfo extends React.Component {
     update() {
         // console.log('update');
         let tab = this.state.tabData;
+
+        // console.log(tab);
+        // debugger;
+
         tab = this.updateMuscleMeta(tab);
         tab = this.updatePatientMeta(tab);
 
@@ -143,12 +147,18 @@ export default class AnatomyInfo extends React.Component {
     updateMuscleMeta(tab) {
         let meta = {};
 
+        // if( this.state.dataPhysicians && this.state.dataPhysicians.length > 0 ) {
+        //     console.log(this.state.dataPhysicians);
+        //     debugger;
+        // }
+
         for (let bm = 0; bm < this.state.dataMuscles.length; bm++) {
             const baseMuscle = this.state.dataMuscles[bm];
 
-            // debugger;
+           
             // console.log('$$$ 1', tab.muscleId, baseMuscle.id);
             if (tab.muscleId === baseMuscle.id) {
+               
                 // console.log()
                 tab.info.muscleName = baseMuscle.muscleName;
                 meta.muscleName = baseMuscle.muscleName;
@@ -175,6 +185,10 @@ export default class AnatomyInfo extends React.Component {
                     if (tab.physicianId === physician.physicianId) {
                         for (let c = 0; c < physician.conditions.length; c++) {
                             const condition = physician.conditions[c];
+                            debugger;
+
+                            
+
                             if (tab.conditionId === condition.condition_id) {
                                 for (let p = 0; p < condition.patients.length; p++) {
                                     const patient = condition.patients[p];
@@ -186,41 +200,45 @@ export default class AnatomyInfo extends React.Component {
                                             const session = patient.sessions[s];
 
                                             let sessionCountAdd = false;
-                             
+                                            
+                                            
                                             for (let i = 0; i < session.injections.length; i++) {
                                                 const injection = session.injections[i];
                                                 // console.log(injection);
                                                 for (let m = 0; m < baseMuscle.muscles.length; m++) {
                                                     const muscle = baseMuscle.muscles[m];
-                                                    if (muscle.muscleId === injection.muscle_image_id) {
-                                                        // console.log('test');
-                                                        patientCountAdd = true;
-                                                        sessionCountAdd = true;
+                                                    console.log(muscle);
+                                                    debugger;
 
-                                                        // debugger;
-                                                        if( injection.injection_medication_id === 1 ) {
-                                                            meta.avgDoseBotox += injection.injection_site_amount;
-                                                            meta.totalBotox += 1;
+                                                    // if (muscle.muscleId === injection.muscle_image_id) {
+                                                    //     // console.log('test');
+                                                    //     patientCountAdd = true;
+                                                    //     sessionCountAdd = true;
 
-                                                            if( meta.minDoseBotox === null || meta.minDoseBotox > injection.injection_site_amount ) {
-                                                                meta.minDoseBotox = injection.injection_site_amount;
-                                                            }
-                                                            if( meta.maxDoseBotox === null || meta.maxDoseBotox < injection.injection_site_amount ) {
-                                                                meta.maxDoseBotox = injection.injection_site_amount;
-                                                            }
-                                                        }
-                                                        else if( injection.injection_medication_id === 2 ) {
-                                                            meta.avgDoseDysport += injection.injection_site_amount;
-                                                            meta.totalDysport += 1;
+                                                    //     // debugger;
+                                                    //     if( injection.injection_medication_id === 1 ) {
+                                                    //         meta.avgDoseBotox += injection.injection_site_amount;
+                                                    //         meta.totalBotox += 1;
 
-                                                            if( meta.minDoseDysport === null || meta.minDoseDysport > injection.injection_site_amount ) {
-                                                                meta.minDoseDysport = injection.injection_site_amount;
-                                                            }
-                                                            if( meta.maxDoseDysport === null || meta.maxDoseDysport < injection.injection_site_amount ) {
-                                                                meta.maxDoseDysport = injection.injection_site_amount;
-                                                            }
-                                                        }
-                                                    }
+                                                    //         if( meta.minDoseBotox === null || meta.minDoseBotox > injection.injection_site_amount ) {
+                                                    //             meta.minDoseBotox = injection.injection_site_amount;
+                                                    //         }
+                                                    //         if( meta.maxDoseBotox === null || meta.maxDoseBotox < injection.injection_site_amount ) {
+                                                    //             meta.maxDoseBotox = injection.injection_site_amount;
+                                                    //         }
+                                                    //     }
+                                                    //     else if( injection.injection_medication_id === 2 ) {
+                                                    //         meta.avgDoseDysport += injection.injection_site_amount;
+                                                    //         meta.totalDysport += 1;
+
+                                                    //         if( meta.minDoseDysport === null || meta.minDoseDysport > injection.injection_site_amount ) {
+                                                    //             meta.minDoseDysport = injection.injection_site_amount;
+                                                    //         }
+                                                    //         if( meta.maxDoseDysport === null || meta.maxDoseDysport < injection.injection_site_amount ) {
+                                                    //             meta.maxDoseDysport = injection.injection_site_amount;
+                                                    //         }
+                                                    //     }
+                                                    // }
                                                 }
                                                 if( sessionCountAdd ) {
                                                     meta.numOfSessions += 1;
@@ -267,20 +285,20 @@ export default class AnatomyInfo extends React.Component {
         meta.oldestPatient = 0;
         meta.averageTimeFirstReported = 'Unavailable';
 
-        let dateMS = Date.now();
-        const today = new Date();
-        let dd = today.getDate();
-        let mm = today.getMonth() + 1; //January is 0!
-        let yyyy = today.getFullYear();
-        if (dd < 10) { dd = '0' + dd; } 
-        if (mm < 10) { mm = '0' + mm; } 
-        let date = yyyy+'-'+mm+'-'+dd;
+        // let dateMS = Date.now();
+        // const today = new Date();
+        // let dd = today.getDate();
+        // let mm = today.getMonth() + 1; //January is 0!
+        // let yyyy = today.getFullYear();
+        // if (dd < 10) { dd = '0' + dd; } 
+        // if (mm < 10) { mm = '0' + mm; } 
+        // let date = yyyy+'-'+mm+'-'+dd;
 
-        function _calculateAge(birthday) { // birthday is a date
-            let ageDifMs = Date.now() - birthday.getTime();
-            let ageDate = new Date(ageDifMs); // miliseconds from epoch
-            return Math.abs(ageDate.getUTCFullYear() - 1970);
-        }
+        // function _calculateAge(birthday) { // birthday is a date
+        //     let ageDifMs = Date.now() - birthday.getTime();
+        //     let ageDate = new Date(ageDifMs); // miliseconds from epoch
+        //     return Math.abs(ageDate.getUTCFullYear() - 1970);
+        // }
 
 
         for (let ph = 0; ph < this.state.dataPhysicians.length; ph++) {
@@ -288,49 +306,65 @@ export default class AnatomyInfo extends React.Component {
             if (tab.physicianId === physician.physicianId) {
                 for (let c = 0; c < physician.conditions.length; c++) {
                     const condition = physician.conditions[c];
-                    if (tab.conditionId === condition.condition_id) {
-                        for (let p = 0; p < condition.patients.length; p++) {
-                            const patient = condition.patients[p];
-                            // console.log('patient', patient);
-                            meta.patientsTotal += 1;
 
-                            if( patient.gender_code.toLowerCase() === 'm' ) {
-                                meta.genderMalePercentage += 1;
-                            }
-                            if( patient.gender_code.toLowerCase() === 'f' ) {
-                                meta.genderFemalePercentage += 1;
-                            }
+                    if( tab.conditionId === condition.id ) {
+                        console.log(condition);
+                        // debugger;
 
-                            let paDate =  new Date(patient.date_of_birth);
-                            let paDateMS = new Date(patient.date_of_birth).getTime();
-                            let age = _calculateAge(paDate);
+                        meta.patientsTotal = condition.totalNumberOfPatients;
+                        meta.genderMalePercentage = condition.genderMale;
+                        meta.genderFemalePercentage = condition.genderFemale;
+                        meta.averageAge = condition.averageAge;
+                        meta.youngestPatient = condition.youngestAge;
+                        meta.oldestPatient = condition.oldestAge;
+                        meta.averageTimeFirstReported = condition.averageTimeFromFirstReportedToTreatment;
 
-                            meta.averageAge += age;
+                    }
 
-                            if( meta.youngestPatient === 0 || age < meta.youngestPatient ) {
-                                meta.youngestPatient = age;
-                            }
-                            if( meta.oldestPatient === 0 || age > meta.oldestPatient ) {
-                                meta.oldestPatient = age;
-                            }
+
+                    // if (tab.conditionId === condition.condition_id) {
+                    //     for (let p = 0; p < condition.patients.length; p++) {
+                    //         const patient = condition.patients[p];
+                    //         // console.log('patient', patient);
+                    //         meta.patientsTotal += 1;
+
+                    //         if( patient.gender_code.toLowerCase() === 'm' ) {
+                    //             meta.genderMalePercentage += 1;
+                    //         }
+                    //         if( patient.gender_code.toLowerCase() === 'f' ) {
+                    //             meta.genderFemalePercentage += 1;
+                    //         }
+
+                    //         let paDate =  new Date(patient.date_of_birth);
+                    //         let paDateMS = new Date(patient.date_of_birth).getTime();
+                    //         let age = _calculateAge(paDate);
+
+                    //         meta.averageAge += age;
+
+                    //         if( meta.youngestPatient === 0 || age < meta.youngestPatient ) {
+                    //             meta.youngestPatient = age;
+                    //         }
+                    //         if( meta.oldestPatient === 0 || age > meta.oldestPatient ) {
+                    //             meta.oldestPatient = age;
+                    //         }
                             
 
-                            // if( result.young === null || age < result.young ) {
-                            //     result.young = age;
-                            // }
-                            // if( result.old === null || age > result.old ) {
-                            //     result.old = age;
-                            // }
-                            // if( )
-                        }
-                    }
+                    //         // if( result.young === null || age < result.young ) {
+                    //         //     result.young = age;
+                    //         // }
+                    //         // if( result.old === null || age > result.old ) {
+                    //         //     result.old = age;
+                    //         // }
+                    //         // if( )
+                    //     }
+                    // }
                 }
             }
         }
 
-        meta.genderMalePercentage = ((meta.genderMalePercentage/meta.patientsTotal) * 100).toFixed(1);
-        meta.genderFemalePercentage = ((meta.genderFemalePercentage/meta.patientsTotal) * 100).toFixed(1);
-        meta.averageAge = (meta.averageAge / meta.patientsTotal).toFixed(1);
+        // meta.genderMalePercentage = ((meta.genderMalePercentage/meta.patientsTotal) * 100).toFixed(1);
+        // meta.genderFemalePercentage = ((meta.genderFemalePercentage/meta.patientsTotal) * 100).toFixed(1);
+        // meta.averageAge = (meta.averageAge / meta.patientsTotal).toFixed(1);
 
         tab.patientMeta = meta;
         return tab;
@@ -494,6 +528,8 @@ export default class AnatomyInfo extends React.Component {
                 {this.state.infoIndex === 2 ? (
                     <div className="panel-main-patient">
                         <p> Patient information </p>
+
+                        {this.state.tab}
                         <div className="patient-table">
                             <table className="table table-bordered">
                                 <thead className="">
