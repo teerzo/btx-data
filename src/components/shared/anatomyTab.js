@@ -207,68 +207,120 @@ export default class AnatomyTab extends React.Component {
                 zones[z].points = [];
             }
 
+            // for (let ph = 0; ph < this.state.dataPhysicians.length; ph++) {
+            //     if (tab.physicianId === this.state.dataPhysicians[ph].physicianId) {
+            //         const physician = this.state.dataPhysicians[ph];
+
+            //         for (let c = 0; c < physician.conditions.length; c++) {
+            //             if (tab.conditionId === physician.conditions[c].condition_id) {
+            //                 const condition = physician.conditions[c];
+
+            //                 for (let pa = 0; pa < condition.patients.length; pa++) {
+            //                     const patient = condition.patients[pa];
+
+            //                     if (patient.sessions && patient.sessions.length > 0) {
+            //                         for (let s = 0; s < patient.sessions.length; s++) {
+            //                             const session = patient.sessions[s];
+
+            //                             // console.log('injections', session.injections.length);
+            //                             if (session.injections && session.injections.length > 0) {
+            //                                 for (let i = 0; i < session.injections.length; i++) {
+            //                                     const injection = session.injections[i];
+
+            //                                     if (injection.muscle_image_id === currentMuscle.muscleId) {
+            //                                         let point = {
+            //                                             x: injection.injection_x_point,
+            //                                             y: injection.injection_y_point,
+            //                                             z: 2,
+            //                                             zinjection_id: injection.injection_id,
+            //                                         }
+                                                    
+
+            //                                         console.log('check', tab.visualId);
+            //                                         if( tab.visualId === 1 ) {
+            //                                             scaleMin = '1%';
+            //                                             scaleMax = '100%';
+            //                                             pointsAll.push(point);
+            //                                         }
+            //                                         else if( tab.visualId === 2 ) {
+            //                                             if( tab.drugId === injection.injection_medication_id ) {
+            //                                                 if( injection.injection_site_amount < scaleMin || scaleMin === null) {
+            //                                                     scaleMin = injection.injection_site_amount;
+            //                                                 } 
+            //                                                 else if(  injection.injection_site_amount > scaleMax || scaleMax === null) {
+            //                                                     scaleMax = injection.injection_site_amount;
+            //                                                 }
+            //                                                 pointsAll.push(point);
+            //                                             }
+            //                                         } 
+            //                                         else if( tab.visualId === 3 ) {
+            //                                             if( tab.drugId === injection.injection_medication_id ) {
+            //                                                 if( injection.injection_site_amount < scaleMin || scaleMin === null) {
+            //                                                     scaleMin = injection.injection_site_amount;
+            //                                                 } 
+            //                                                 else if(  injection.injection_site_amount > scaleMax || scaleMax === null) {
+            //                                                     scaleMax = injection.injection_site_amount;
+            //                                                 }
+            //                                                 pointsAll.push(point);
+            //                                             }
+            //                                         }                                                                                               
+            //                                     }
+            //                                 }
+            //                             }
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+
             for (let ph = 0; ph < this.state.dataPhysicians.length; ph++) {
                 if (tab.physicianId === this.state.dataPhysicians[ph].physicianId) {
                     const physician = this.state.dataPhysicians[ph];
 
-                    for (let c = 0; c < physician.conditions.length; c++) {
-                        if (tab.conditionId === physician.conditions[c].condition_id) {
-                            const condition = physician.conditions[c];
+                    // console.log('injections', session.injections.length);
+                    if (physician.injections && physician.injections.length > 0) {
+                        for (let i = 0; i < physician.injections.length; i++) {
+                            const injection = physician.injections[i];
 
-                            for (let pa = 0; pa < condition.patients.length; pa++) {
-                                const patient = condition.patients[pa];
-
-                                if (patient.sessions && patient.sessions.length > 0) {
-                                    for (let s = 0; s < patient.sessions.length; s++) {
-                                        const session = patient.sessions[s];
-
-                                        // console.log('injections', session.injections.length);
-                                        if (session.injections && session.injections.length > 0) {
-                                            for (let i = 0; i < session.injections.length; i++) {
-                                                const injection = session.injections[i];
-
-                                                if (injection.muscle_image_id === currentMuscle.muscleId) {
-                                                    let point = {
-                                                        x: injection.injection_x_point,
-                                                        y: injection.injection_y_point,
-                                                        z: 2,
-                                                        zinjection_id: injection.injection_id,
-                                                    }
-                                                    
-
-                                                    console.log('check', tab.visualId);
-                                                    if( tab.visualId === 1 ) {
-                                                        scaleMin = '1%';
-                                                        scaleMax = '100%';
-                                                        pointsAll.push(point);
-                                                    }
-                                                    else if( tab.visualId === 2 ) {
-                                                        if( tab.drugId === injection.injection_medication_id ) {
-                                                            if( injection.injection_site_amount < scaleMin || scaleMin === null) {
-                                                                scaleMin = injection.injection_site_amount;
-                                                            } 
-                                                            else if(  injection.injection_site_amount > scaleMax || scaleMax === null) {
-                                                                scaleMax = injection.injection_site_amount;
-                                                            }
-                                                            pointsAll.push(point);
-                                                        }
-                                                    } 
-                                                    else if( tab.visualId === 3 ) {
-                                                        if( tab.drugId === injection.injection_medication_id ) {
-                                                            if( injection.injection_site_amount < scaleMin || scaleMin === null) {
-                                                                scaleMin = injection.injection_site_amount;
-                                                            } 
-                                                            else if(  injection.injection_site_amount > scaleMax || scaleMax === null) {
-                                                                scaleMax = injection.injection_site_amount;
-                                                            }
-                                                            pointsAll.push(point);
-                                                        }
-                                                    }                                                                                               
-                                                }
-                                            }
-                                        }
-                                    }
+                            if (injection.muscleId === currentMuscle.muscleId) {
+                                let point = {
+                                    x: injection.injectionX,
+                                    y: injection.injectionY,
+                                    z: 2,
+                                    zinjection_id: injection.injectionId,
                                 }
+                                
+
+                                console.log('check', tab.visualId);
+                                if( tab.visualId === 1 ) {
+                                    scaleMin = '1%';
+                                    scaleMax = '100%';
+                                    pointsAll.push(point);
+                                }
+                                else if( tab.visualId === 2 ) {
+                                    // if( tab.drugId === injection.injection_medication_id ) {
+                                    //     if( injection.injection_site_amount < scaleMin || scaleMin === null) {
+                                    //         scaleMin = injection.injection_site_amount;
+                                    //     } 
+                                    //     else if(  injection.injection_site_amount > scaleMax || scaleMax === null) {
+                                    //         scaleMax = injection.injection_site_amount;
+                                    //     }
+                                        pointsAll.push(point);
+                                    // }
+                                } 
+                                else if( tab.visualId === 3 ) {
+                                    // if( tab.drugId === injection.injection_medication_id ) {
+                                    //     if( injection.injection_site_amount < scaleMin || scaleMin === null) {
+                                    //         scaleMin = injection.injection_site_amount;
+                                    //     } 
+                                    //     else if(  injection.injection_site_amount > scaleMax || scaleMax === null) {
+                                    //         scaleMax = injection.injection_site_amount;
+                                    //     }
+                                        pointsAll.push(point);
+                                    // }
+                                }                                                                                               
                             }
                         }
                     }
@@ -302,7 +354,7 @@ export default class AnatomyTab extends React.Component {
     }
 
     updatePoints() {
-        console.log('updatePoints');
+        // console.log('updatePoints');
         let tab = this.state.tabData;
 
 
@@ -751,7 +803,7 @@ checkCursorValue() {
 }
 
 heatmapUpdateFinish () {
-    console.log('UPDATE FINISH');
+    // console.log('UPDATE FINISH');
     this.setState({
         optionsChanged: false,
     });
@@ -787,7 +839,7 @@ render() {
                         <p> Test </p>
                     </div>
                 </div>
-                <div className="title"> {this.state.tabData.tabName} </div>
+                {/* <div className="title"> {this.state.tabData.tabName} </div> */}
                 <Heatmap
                     optionsChanged={this.state.optionsChanged}
 

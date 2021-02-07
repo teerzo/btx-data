@@ -5,7 +5,8 @@
 
     .options-parent {
         width: 300px;
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: scroll;
     }
     .visual-parent {
         width: 50%;
@@ -89,6 +90,8 @@
     }
     .info-parent {
         width: 50%;
+        overflow-x: hidden;
+        overflow-y: auto;
 
         .title {
             font-size:20px;
